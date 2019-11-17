@@ -1,39 +1,86 @@
-# Stack
-# - stores data el on top of each others and only allow operations at one end
-# - Last in First out (LIFO) feature, the data el inserted last in sequence will be the first to come out
-# - Adding = PUSH 
-# - Removing = POP
-# - stack is implemented in Python using an array 
-
-
+# Stack Implementation
 class Stack:
 	def __init__(self):
-		self.stack = []
+		self.items = []
 
-	def add(self, dataval):
-		if dataval not in self.stack:
-			self.stack.append(dataval)
-			return True
-		else: 
-			return False
+	def isEmpty(self):
+		return self.items == []
 
-	def remove(self):
-		if len(self.stack) <= 0:
-			return ("No element in the Stack")
-		else:
-			return self.stack.pop()
-	
+	def push(self, item):
+		return self.items.append(item)
+
+	def pop(self):
+		return self.items.pop()
+
 	def peek(self):
-		return self.stack[-1] #peek top of stack
+		return self.items[len(self.items)-1]
 
-Stack1 = Stack()
-Stack1.add("Mon")
-Stack1.add("Tue")
-print(Stack1.peek()) #Tue
+	def size(self):
+		return len(self.items)
 
-Stack1.add("Wed")
-Stack1.add("Thu")
-print(Stack1.peek()) #Thu
+# Reverse a string
+def revstring(mystring):
+	stack1 = Stack()
+	for letter in mystring:
+		stack1.push(letter)
 
-Stack1.remove()
-print(Stack1.peek()) #Wed
+	revstr = ''
+	while not stack1.isEmpty():
+		revstr = revstr + stack1.pop()	
+	return revstr
+	
+print(revstring("string"))
+
+# Simple Balanced Parentheses
+def balanceChecker(stringparam):
+	s = Stack()
+	balanced = True
+	index = 0
+	while index < len(stringparam) and balanced:
+		currentIteration = stringparam[index]
+		if currentIteration == "(":
+			s.push(currentIteration)
+		else:
+			if s.isEmpty():
+				balanced = False
+			else: 
+				s.pop()
+
+		index = index + 1
+
+	if balanced and s.isEmpty():
+		return True
+	else:
+		return False
+
+print(balanceChecker('(()())(()()()()()(((()))))'))
+
+# Balanced Parentheses Checker
+def balanceParentheses(stringparam):
+	s = Stack()
+	balanced = True
+	index = 0
+	while index < len(stringparam) and balanced:
+		symbol = stringparam[index]
+		if symbol in "([{":
+			s.push(symbol)
+		else:
+			if s.isEmpty():
+				balanced = False
+			else: 
+				top = s.pop()
+				if not matches(top, symbol):
+					balanced = False
+		index = index + 1
+	if balanced and s.isEmpty():
+		return True
+	else: 
+		return False
+
+def matches(open, close):
+	opens = "([{"
+	closes = ")]}"
+	return opens.index(open) == closes.index(close)
+
+print(balanceParentheses('{({([][])}())}'))
+print(balanceParentheses('[{()]'))

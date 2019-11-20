@@ -1,32 +1,115 @@
-# Queue
-# - data el are allowed on one end but removed from the other end 
-# - First In First Out (FIFO) feature, the data el inserted first is the first to be removed
-# - queue is implemented in Python using a list 
-
-class Queue:
+# Queue Implementation
+class Queue: 
 	def __init__(self):
-		self.queue = list()
+		self.items = []
 
-	def addtoq(self, dataval):
-		if dataval not in self.queue:
-			self.queue.insert(0, dataval)
-			return True
-		return False
+	def isEmpty(self):
+		return self.items == []
 
-	def removefromq(self):
-		if len(self.queue) > 0:
-			return self.queue.pop()
-		return("No elements in queue!")
+	def enqueue(self, item):
+		self.items.insert(0, item)
+
+	def dequeue(self):
+		return self.items.pop()
 
 	def size(self):
-		return len(self.queue)
-	
-Queue1 = Queue()
+		return len(self.items)
 
-Queue1.addtoq("Mon")
-Queue1.addtoq("Tue")
-Queue1.addtoq("Wed")
-print(Queue1.size()) #3
+q = Queue()
 
-Queue1.removefromq()
-print(Queue1.size()) #2
+q.enqueue(4)
+q.enqueue("dog")
+q.enqueue(True)
+
+print(q.items)
+print(q.size())
+print(q.dequeue())
+print(q.isEmpty())
+
+# Simulation: Hot Potato
+def hotPotato(namelist, num):
+	simqueue = Queue()
+	for name in namelist:
+		simqueue.enqueue(name)
+
+	while simqueue.size() > 1:
+		for i in range(num):
+			simqueue.enqueue(simqueue.dequeue())
+
+		simqueue.dequeue()
+
+	return simqueue.dequeue()
+
+print(hotPotato(["Jon", "Ted", "Brad", "Park"], 7))
+
+# Simulation: Printing Tasks
+import random
+
+class Printer:
+    def __init__(self, ppm):
+        self.pagerate = ppm
+        self.currentTask = None
+        self.timeRemaining = 0
+
+    def tick(self):
+        if self.currentTask != None:
+            self.timeRemaining = self.timeRemaining - 1
+            if self.timeRemaining <= 0:
+                self.currentTask = None
+
+    def busy(self):
+        if self.currentTask != None:
+            return True
+        else:
+            return False
+
+    def startNext(self,newtask):
+        self.currentTask = newtask
+        self.timeRemaining = newtask.getPages() * 60/self.pagerate
+
+class Task:
+    def __init__(self,time):
+        self.timestamp = time
+        self.pages = random.randrange(1,21)
+
+    def getStamp(self):
+        return self.timestamp
+
+    def getPages(self):
+        return self.pages
+
+    def waitTime(self, currenttime):
+        return currenttime - self.timestamp
+
+
+def simulation(numSeconds, pagesPerMinute):
+
+    labprinter = Printer(pagesPerMinute)
+    printQueue = Queue()
+    waitingtimes = []
+
+    for currentSecond in range(numSeconds):
+
+      if newPrintTask():
+         task = Task(currentSecond)
+         printQueue.enqueue(task)
+
+      if (not labprinter.busy()) and (not printQueue.isEmpty()):
+        nexttask = printQueue.dequeue()
+        waitingtimes.append( nexttask.waitTime(currentSecond))
+        labprinter.startNext(nexttask)
+
+      labprinter.tick()
+
+    averageWait=sum(waitingtimes)/len(waitingtimes)
+    print("Average Wait %6.2f secs %3d tasks remaining."%(averageWait,printQueue.size()))
+
+def newPrintTask():
+    num = random.randrange(1,181)
+    if num == 180:
+        return True
+    else:
+        return False
+
+for i in range(10):
+    simulation(3600,5)

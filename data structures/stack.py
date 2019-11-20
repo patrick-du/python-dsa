@@ -7,7 +7,7 @@ class Stack:
 		return self.items == []
 
 	def push(self, item):
-		return self.items.append(item)
+		self.items.append(item)
 
 	def pop(self):
 		return self.items.pop()
@@ -84,3 +84,41 @@ def matches(open, close):
 
 print(balanceParentheses('{({([][])}())}'))
 print(balanceParentheses('[{()]'))
+
+# Decimal to Binary
+def divideBy2(decNumber):
+	remStack = Stack()
+
+	while decNumber > 0: 
+		rem = decNumber % 2
+		remStack.push(rem)
+		decNumber = decNumber // 2
+
+	binString = ""
+
+	while not remStack.isEmpty():
+		binString = binString + str(remStack.pop())
+
+	return binString
+
+print(divideBy2(948))
+
+
+# Base Converter
+def baseConverter(decNumber, base):
+	digits = "0123456789ABCDEF"
+	remStack = Stack()
+
+	while decNumber > 0: 
+		rem = decNumber % base
+		remStack.push(rem)
+		decNumber = decNumber//base
+
+	newString = ""
+	while not remStack.isEmpty():
+		newString = newString + digits[remStack.pop()]
+	return newString
+
+print(baseConverter(25, 8))
+print(baseConverter(256, 16))
+print(baseConverter(26, 26))

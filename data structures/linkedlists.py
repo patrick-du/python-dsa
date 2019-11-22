@@ -1,94 +1,144 @@
-# Linked List 
-# - sequence of data elements connected via links OR string of nodes, each node containing both data and a reference to the next node in the list
-# - each data el contains connection to another data el in form of pointer
-# - implemented using concept of nodes in python, it is not a standard concept
+# Linked List Implementation
+# Node Implementation
+class Node:
+	def __init__(self, initdata):
+		self.data = initdata
+		self.next = None
 
-# Node Class Definition
-class Node: 
-	def __init__(self, dataval=None): # Note that __init__ is a reserved method that is called when an object is created from a class and it initializes the class attributes
-		self.dataval = dataval
-		self.nextval = None
+	def getData(self):
+		return self.data
 
-# Singly LinkedList Definition
-class SLinkedList: 
-	def __init__(self): # Self parameter represents instance of class, it binds the attributes with the given arguments
-		self.headval = None
+	def getNext(self):
+		return self.next
 
-	def listPrint(self): # Print Linked List
-		printval = self.headval
-		while printval is not None:
-			print (printval.dataval)
-			printval = printval.nextval
+	def setData(self, newdata):
+		self.data = newdata
 
-	def atBeginning(self, newdata): # Node Insertion
-		NewNode = Node(newdata)
-		NewNode.nextval = self.headval
-		self.headval = NewNode
+	def setNext(self, newnext):
+		self.next = newnext
 
-	def atEnd(self, newdata):
-		NewNode = Node(newdata)
-		if self.headval is None: 
-			self.headval = NewNode
-			return
-		last = self.headval
-		while(last.nextval):
-			last = last.nextval
-		last.nextval = NewNode
+temp = Node(93)
+print(temp.getData())
 
-	def inBetween(self, middle_node, newdata):
-		if middle_node is None:
-			print("The mentioned node is absent")
-			return
+# Unordered Linked List Implementation
+class UnorderedList:
+	def __init__(self):
+		self.head = None
 
-		NewNode = Node(newdata)
-		NewNode.nextval = middle_node.nextval
-		middle_node.nextval = NewNode
+	def isEmpty(self):
+		return self.head == None
 
-	def removeNode(self, removekey):
-		Head = self.headval
+	def add(self, item):
+		temp = Node(item);
+		temp.setNext(self.head)
+		self.head = temp
 
-		if (Head is not None):
-			if (Head.dataval == removekey):
-				self.headval = Head.nextval
-				Head = None
-				return
+	def size(self):
+		current = self.head
+		count = 0
+		while current != None:
+			count = count + 1
+			current = current.getNext()
+		return count
 
-		while (Head is not None):
-			if Head.dataval == removekey:
-				break
-			prev = Head
-			Head = Head.nextval
+	def search(self, item):
+		current = self.head
+		found = False
+		while current != None and not found:
+			if current.getData() == item:
+				found = True
+			else: 
+				current = current.getNext()
+		return found
 
-		if (Head == None):
-			return
+	def remove(self, item):
+		current = self.head
+		previous = None
+		found = False
+		# Searching Part
+		while not found:
+			if current.getData() == item:
+				found = True
+			else:
+				previous = current
+				current = current.getNext()
+		# Removal Part
+		if previous == None:
+			self.head = current.getNext()
+		else:
+			previous.setNext(current.getNext())
 
-		prev.nextval = Head.nextval
-		Head = None
+mylist1 = UnorderedList()
+mylist1.add(31)
+mylist1.add(77)
+mylist1.add(17)
+mylist1.add(93)
+mylist1.add(26)
+mylist1.add(54)
+print(mylist1.isEmpty())
+print(mylist1.size())
+print(mylist1.search(31))
+mylist1.remove(93)
+print(mylist1.size())
+print(mylist1.search(93))
 
-list1 = SLinkedList()
-list1.headval = Node("Mon")
+# Ordered Linked List Implementation
+class OrderedList:
+	def __init__(self):
+		self.head = None
 
-e2 = Node("Tue")
-e3 = Node("Wed")
+	def isEmpty(self):
+		return self.head == None
 
-list1.headval.nextval = e2 #Link first Node to second Node
-e2.nextval = e3 #Link second Node to third Node
+	def size(self):
+		current = self.head
+		count = 0
+		while current!= None:
+			count = count + 1
+			current = current.getNext()
+		return count
 
-list1.listPrint()
+	def search(self, item):
+		current = self.head
+		found = False
+		stop = False
+		while current != None and not found and not stop:
+			if current.getData() == item:
+				found = True
+			else:
+				if current.getData() > item:
+					stop = True
+				else: 
+					current = current.getNext()
+		return found
 
-list1.atBeginning("Sun")
-list1.listPrint()
+	def add(self, item):
+		current = self.head
+		previous = None
+		stop = False
+		while current != None and not stop:
+			if current.getData() > item:
+				stop = True
+			else:
+				previous = current
+				current = current.getNext()
 
-list1.atEnd("Thu")
-list1.listPrint()
+		temp = Node(item)
+		if previous == None:
+			temp.setNext(current)
+			self.head = temp
+		else: 
+			temp.setNext(current)
+			previous.setNext(temp)
 
-print("hi")
-list1.inBetween(list1.headval.nextval, "Fri")
-list1.listPrint()
-print("hi")
+mylist2 = OrderedList()
+mylist2.add(31)
+mylist2.add(77)
+mylist2.add(17)
+mylist2.add(93)
+mylist2.add(26)
+mylist2.add(54)
 
-list1.removeNode("Mon")
-list1.removeNode("Thu")
-list1.removeNode("Fri")
-list1.listPrint()
-
+print(mylist2.size())
+print(mylist2.search(93))
+print(mylist2.search(100))

@@ -5,8 +5,8 @@ class Solution(object):
         :type target: int
         :rtype: List[int]
         """
-        complementMap=dict()
-        
+        complementMap = dict()
+
         for i in range(len(nums)):
             num = nums[i]
             complement = target - num
@@ -14,14 +14,10 @@ class Solution(object):
                 return [complementMap[num], i]
             else:
                 complementMap[complement] = i
-                
-    
+
     def bruteForceTwoSum(self, nums, target):
         for i in range(len(nums)):
             for j in range(i+1, (len(nums))):
                 sum = nums[i] + nums[j]
                 if target == sum:
                     return [i, j]
-        
-        
-        

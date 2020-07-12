@@ -15,13 +15,13 @@ class Solution(object):
             return True
         else:
             return False
-        
+
     def solution1(self, s, t):
         d = {}
         if len(s) != len(t):
             return False
-        
-        for c in s:  
+
+        for c in s:
             if d.get(c) == None:
                 d[c] = 1
             else:

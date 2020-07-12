@@ -22,6 +22,5 @@ class Solution(object):
         for num in nums:
             if num in dic:
                 return True
-            else: 
+            else:
                 dic[num] = 1
-                
